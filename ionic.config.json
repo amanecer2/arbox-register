@@ -1,0 +1,7 @@
+{
+  "name": "arbox-register-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
