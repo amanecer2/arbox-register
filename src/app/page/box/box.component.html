@@ -1,15 +1,17 @@
 <ng-container *ngIf="data$ | async as boxesState; else noData">
     <ion-content>
+        <app-header [withBackButton]="true"></app-header>
 
         <ion-list>
             <ion-list-header lines="inset">
-                <ion-label>Recent</ion-label>
-                <ion-button>Clear</ion-button>
+                <ion-label></ion-label>
+                <ion-button>Clear future</ion-button>
             </ion-list-header>
-            <ion-item lines="none" *ngFor="let workout of boxesState | keyvalue" >
+            <ion-item lines="none" *ngFor="let workout of boxesState | keyvalue | dateSort" >
                 <ion-label color="primary" (click)="navigateToDayWorkout(workout.value[0])">
-                    <h2>{{workout.value[0]}}</h2>
+                    <h2>{{workout.value[0] | date:'fullDate'}}</h2>
                 </ion-label>
+                <ion-text>{{(workout.value[0] | isInWorkout | async) ? 'wating': ''}}</ion-text>
             </ion-item>
         </ion-list>
     </ion-content>

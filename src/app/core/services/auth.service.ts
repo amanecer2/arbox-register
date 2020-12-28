@@ -1,22 +1,27 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {ILogin} from "../../../interface/login.interface";
-import {getLocalStorage} from "./arbox.service";
 import {map} from "rxjs/operators";
+import {getLocalStorage} from "../../utils/storage.utils";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
 
-    private _currentUser$ = new BehaviorSubject<ILogin.LoginInterface>(getLocalStorage('login'));
+    private _currentUser$ = new BehaviorSubject<ILogin.LoginInterface>(undefined);
     readonly currentUser$: Observable<ILogin.LoginInterface>;
 
+    token = '';
     constructor() {
+        const user = getLocalStorage<ILogin.LoginInterface>('login');
+        this.setUser(user);
+
         this.currentUser$ = this._currentUser$.asObservable();
     }
 
     setUser(user: ILogin.LoginInterface) {
+        this.token = user ? user.token : undefined;
         this._currentUser$.next(user);
     }
 
@@ -27,6 +32,9 @@ export class AuthService {
                     return user && user.token ? user.token : undefined;
                 })
             );
+    }
+    getToken() {
+        return this.token;
     }
 
     getCurrentUser$() {

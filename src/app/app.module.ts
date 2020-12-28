@@ -19,6 +19,7 @@ import {boxesReducer} from "./state/boxes/box.reducer";
 import {AngularFireModule, } from '@angular/fire';
 import {environment} from '../environments/environment';
 import {AngularFireFunctions} from "@angular/fire/functions";
+import {SharedModule} from "./shared/shared.module";
 
 @NgModule({
     declarations: [AppComponent],
@@ -39,7 +40,8 @@ import {AngularFireFunctions} from "@angular/fire/functions";
                 strictStateSerializability: true
             }
         }*/),
-        AngularFireModule.initializeApp(environment.firebase)
+        AngularFireModule.initializeApp(environment.firebase),
+        SharedModule
     ],
     providers: [
         StatusBar,

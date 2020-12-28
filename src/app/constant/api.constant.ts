@@ -1,6 +1,8 @@
 import { format } from 'date-fns';
 
 export const BASE_URL = 'https://apiapp.arboxapp.com/index.php/api/v1';
+export const BASE_URL_SERVER = 'https://arbox-register.herokuapp.com';
+//export const BASE_URL_SERVER = `http://localhost:3000`; // 'https://arbox-register.herokuapp.com';
 
 export const API = {
     login: (email: string) => `${BASE_URL}/user/${email}/session`, // POST
@@ -14,6 +16,7 @@ export const API = {
     deleteWatingList: (userId, wodId) => `${BASE_URL}/scheduleStandby/${userId}/${wodId}`, // DELETE
     enterWaitList: () => `${BASE_URL}/scheduleStandby/create`, // POST
     enterWorout: () => `${BASE_URL}/scheduleUser`, /// POST,
-    registerUser: () => `http://localhost:3000/arbox/register-user`,
-    scheduleWorkout: () => `http://localhost:3000/arbox/schedule`,
+    registerUser: () => `${BASE_URL_SERVER}/arbox/register-user`,
+    scheduleWorkout: () => `${BASE_URL_SERVER}/arbox/schedule`,
+    isUserRegister: () => `${BASE_URL_SERVER}/is-user-login`,
 };

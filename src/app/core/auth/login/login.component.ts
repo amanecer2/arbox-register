@@ -32,8 +32,10 @@ export class LoginComponent implements OnInit {
                 tap(_loginData => this.arboxService.getBoxData(_loginData.user.id).subscribe()),
                 tap( _loginData => this.arboxService.getUserMembership(_loginData.user.id).subscribe()),
                 switchMap( _loginData => this.arboxService.getBoxData(_loginData.user.id)),
+                tap( _ => this.arboxService.getUserSchedules().subscribe()),
                 tap((boxes: IBoxData[]) => {
-                    this._router.navigate(['/app/boxes/' + boxes[0].id])
+                    debugger
+                    this._router.navigate([`app/boxes/${boxes[0].id}` ]);
                 }),            )
             .subscribe();
     }

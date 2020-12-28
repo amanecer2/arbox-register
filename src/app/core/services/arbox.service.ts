@@ -9,6 +9,8 @@ import {STRING} from "../../constant/string.constant";
 import {BoxStateService} from "../../state/boxes/box-state.service";
 import {IScheduleItem} from "../../../interface/schedule";
 import {format} from "date-fns";
+import {AuthService} from "./auth.service";
+import {getLocalStorage, setLocalStorage} from "../../utils/storage.utils";
 
 @Injectable({
     providedIn: 'root'
@@ -16,10 +18,19 @@ import {format} from "date-fns";
 export class ArboxService {
 
     constructor(private _http: HttpClient,
-                private boxStateService: BoxStateService
+                private boxStateService: BoxStateService,
+                private authService: AuthService
     ) {
     }
 
+    isUserRegister() {
+        return this._http.get(API.isUserRegister()).pipe(
+            catchError( err => {
+                this.authService.setUser(undefined);
+                return throwError(err);
+            })
+        );
+    }
     getState() {
         return this.boxStateService.getState();
     }
@@ -48,6 +59,14 @@ export class ArboxService {
         );
     }
 
+    getUserSchedules() {
+        return this._http.get(API.scheduleWorkout()).pipe(
+            tap( (userSchedules: IScheduleItem[]) => {
+                userSchedules.forEach( s => this.boxStateService.setFutureWorkout(s));
+            })
+        );
+    }
+
     registerUserAtServer(user: IUserServer) {
         return this._http.post(API.registerUser(), {user});
     }
@@ -56,14 +75,12 @@ export class ArboxService {
 
         const boxData = getLocalStorage<IBoxData[]>(STRING.BOX);
         if (boxData) {
-            // this._boxData$.next(boxData);
             this.boxStateService.setBoxes(boxData);
             return of(boxData);
         }
         const url = API.getBoxData(userId);
         return this._http.get<IBoxData[]>(url).pipe(
             tap(_boxData => setLocalStorage(STRING.BOX, _boxData)),
-            // tap(_boxData => this._boxData$.next(_boxData)),
             tap((_boxData: IBoxData[]) => {
                 this.boxStateService.setBoxes(_boxData);
             })
@@ -113,11 +130,4 @@ export class ArboxService {
     }
 }
 
-export function getLocalStorage<T>(name: string): T {
-    return JSON.parse(localStorage.getItem(name));
-}
-
-export function setLocalStorage(name, data) {
-    localStorage.setItem(name, JSON.stringify(data));
-}
 

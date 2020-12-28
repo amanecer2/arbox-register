@@ -1,9 +1,9 @@
 import {createReducer, on, Action} from '@ngrx/store';
 import {removeFutureWorkout, setBoxes, setCurrentBoxName, setFutureWorkout, SetWorkout} from './box.actions';
 import {IBoxData} from '../../../interface/box';
-import {getLocalStorage} from '../../core/services/arbox.service';
 import {REDUCER, STRING} from '../../constant/string.constant';
-import {IScheduleItem} from "../../../interface/schedule";
+import {IScheduleItem} from '../../../interface/schedule';
+import {getLocalStorage} from '../../utils/storage.utils';
 
 const boxes = getLocalStorage<IBoxData[]>(STRING.BOX);
 const boxesMap = new Map<number, IBoxData>();
@@ -83,14 +83,11 @@ export const _boxCreateReducer = createReducer<IBoxState>(
     }),
     on(SetWorkout, (state, {payload}) => {
         const {boxId, date, workouts} = payload;
-        console.log('_workouts');
         let __workouts = {...state.workouts};
 
         if (!__workouts[boxId]) {
-            console.log('_workouts is emtpy');
             __workouts[boxId] = new Map();
         }
-        console.log('_workouts', __workouts[boxId])
 
         __workouts[boxId].set(date, workouts);
         return {

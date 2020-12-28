@@ -1,12 +1,11 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BoxStateService} from '../../state/boxes/box-state.service';
-import {filter, map, switchMap, tap} from 'rxjs/operators';
+import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {combineLatest, Observable, of} from 'rxjs';
 import {AuthService} from "../../core/services/auth.service";
 import {ArboxService} from "../../core/services/arbox.service";
 import {addDays} from "date-fns";
-import {IBoxState} from "../../state/boxes/box.reducer";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 
 @UntilDestroy()
@@ -25,6 +24,7 @@ export class BoxComponent implements OnInit {
                 private authService: AuthService,
                 private arboxService: ArboxService
     ) {
+       // debugger
     }
 
     ngOnInit() {
@@ -47,10 +47,17 @@ export class BoxComponent implements OnInit {
             .pipe(
                 untilDestroyed(this),
                 switchMap(([boxesState, userID]) => {
+                    const box = boxesState.boxes.get(boxesState.currentBox);
+                    if (!box) {
+                        return of(null);
+                    }
                     return combineLatest(
-                        this.arboxService.scheduleByDateList(userID, boxesState.boxes.get(boxesState.currentBox).id, addDays(new Date(), 1)),
-                        this.arboxService.scheduleByDateList(userID, boxesState.boxes.get(boxesState.currentBox).id, addDays(new Date(), 2)),
-                        this.arboxService.scheduleByDateList(userID, boxesState.boxes.get(boxesState.currentBox).id, addDays(new Date(), 3)),
+                        this.arboxService.scheduleByDateList(userID, box.id, addDays(new Date(), 2)),
+                        this.arboxService.scheduleByDateList(userID, box.id, addDays(new Date(), 3)),
+                        this.arboxService.scheduleByDateList(userID, box.id, addDays(new Date(), 4)),
+                        this.arboxService.scheduleByDateList(userID, box.id, addDays(new Date(), 5)),
+                        this.arboxService.scheduleByDateList(userID, box.id, addDays(new Date(), 6)),
+                        this.arboxService.scheduleByDateList(userID, box.id, addDays(new Date(), 7)),
                         of(boxesState)
                     );
                 })
@@ -59,7 +66,18 @@ export class BoxComponent implements OnInit {
             });
 
         this.route.url.subscribe(queryParams => {
-            this.boxStateService.setCurrentBox(+queryParams[0].path);
+            const id = +queryParams[0].path;
+            if (id === -1) {
+                    this.boxStateService.getState(true).pipe(
+                        take(1),
+                        tap( currentBox => {
+                            debugger
+                          //  this.boxStateService.setCurrentBox([...currentBox.boxes][0][0]);
+                            this.router.navigate(['../' + [...currentBox.boxes][0][0] ], {relativeTo: this.route});
+                        })
+                    ).subscribe();
+            }
+            this.boxStateService.setCurrentBox(id);
         });
     }
 

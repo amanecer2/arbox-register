@@ -17,12 +17,31 @@ export class BoxStateService {
     constructor(private store: Store<IBoxState>) {
     }
 
-    getState(): Observable<IBoxState> {
+    getState(noGourd = false): Observable<IBoxState> {
         return this.store.pipe(
             select((dd: any) => {
                 return dd[REDUCER.BOXES];
             }),
-            filter(data => !!data.currentBox),
+            filter(data => noGourd ? true : !!data.currentBox),
+        );
+    }
+
+    currentBox(): Observable<IBoxState> {
+        return this.store.pipe(
+            select((dd: any) => {
+                return dd[REDUCER.BOXES];
+            }),
+            map(data => {
+                return data.boxes.get([data.currentBox]);
+            }),
+        );
+    }
+
+    getFuturesWorkouts(): Observable<Map<string, IScheduleItem>> {
+        return this.getState(true).pipe(
+            map(data => {
+                return data.futureWorkouts;
+            }),
         );
     }
 
@@ -50,6 +69,7 @@ export class BoxStateService {
     setFutureWorkout(workout: IScheduleItem) {
         this.store.dispatch(setFutureWorkout({payload: workout}));
     }
+
     removeFutureWorkout(workout: IScheduleItem) {
         this.store.dispatch(removeFutureWorkout({payload: workout}));
     }

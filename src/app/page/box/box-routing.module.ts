@@ -7,8 +7,7 @@ import {WorkoutDayComponent} from "./workout-day/workout-day.component";
 const routes: Routes = [
     {
         path: ':id',
-        component: BoxComponent,
-        pathMatch: 'full'
+        component: BoxComponent
     },
     {
         path: ':id/:data',
