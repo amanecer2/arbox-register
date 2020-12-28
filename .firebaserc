@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "arbox-register": {
+      "hosting": {
+        "app": [
+          "arbox-register"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<ng-container *ngIf="data$ | async as boxesState; else noData">
+    <ion-content>
+
+        <ion-list>
+            <ion-list-header lines="inset">
+                <ion-label>Recent</ion-label>
+                <ion-button>Clear</ion-button>
+            </ion-list-header>
+            <ion-item lines="none" *ngFor="let workout of boxesState | keyvalue" >
+                <ion-label color="primary" (click)="navigateToDayWorkout(workout.value[0])">
+                    <h2>{{workout.value[0]}}</h2>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ng-container>
+
+<ng-template #noData>no data!!!!!</ng-template>

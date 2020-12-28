@@ -3,7 +3,20 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+    production: false,
+    firebase: {
+        apiKey: 'AIzaSyAhhrDCPXtS_-uJJQ3UctIogXcgS1ipUJg',
+        authDomain: 'arbox-register.firebaseapp.com',
+       // databaseURL: 'https://arbox-register.firebaseio.com',
+        projectId: 'arbox-register',
+        storageBucket: 'arbox-register.appspot.com',
+        messagingSenderId: '543664167965',
+        appId: '1:543664167965:web:cefd683a6fa74a1db57af4',
+        measurementId: 'G-8FXJ0R7Z1R',
+        host: 'http://localhost:5001',
+        ssl: false,
+        databaseURL: 'http://localhost:9000?ns=arbox-register',
+    }
 };
 
 /*
